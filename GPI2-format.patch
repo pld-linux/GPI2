@@ -1,0 +1,11 @@
+--- GPI2-1.1.0/src/GPI2_Logger.c.orig	2014-06-18 21:42:30.000000000 +0200
++++ GPI2-1.1.0/src/GPI2_Logger.c	2014-09-03 17:47:28.132279202 +0200
+@@ -191,7 +191,7 @@
+       vsnprintf (buf + sl, 1024 - sl, fmt, ap);
+       va_end (ap);
+ 
+-      fprintf (stdout, buf);
++      fputs (buf, stdout);
+       fflush (stdout);
+ 
+       goto endL;

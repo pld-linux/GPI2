@@ -1,0 +1,24 @@
+--- GPI2-1.1.0/src/GPI2_Utility.h.orig	2014-09-03 17:40:08.285630994 +0200
++++ GPI2-1.1.0/src/GPI2_Utility.h	2014-09-03 17:36:54.835639111 +0200
+@@ -25,7 +25,6 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <time.h>
+-#include <xmmintrin.h>
+ 
+ #ifdef DEBUG
+ #define gaspi_print_error(msg, ...)					\
+@@ -51,7 +50,12 @@
+ #ifdef MIC
+ #define gaspi_delay()   _mm_delay_32(32)
+ #else
+-#define gaspi_delay()   _mm_pause()
++#if defined(__i386__) || defined(__x86_64__)
++#define gaspi_delay()   __builtin_ia32_pause()
++#else
++#include <unistd.h>
++#define gaspi_delay()   usleep(0)
++#endif
+ #endif
+ 
+ 
