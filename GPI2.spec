@@ -7,12 +7,12 @@
 Summary:	GPI-2 - API for asynchronous communication
 Summary(pl.UTF-8):	GPI-2 - API do komunikacji asynchronicznej
 Name:		GPI2
-Version:	1.1.0
+Version:	1.1.1
 Release:	0.1
 License:	GPL v3
 Group:		Applications
 Source0:	https://www.openfabrics.org/downloads/gpi2/%{name}-%{version}.tar.gz
-# Source0-md5:	f4d7dcc6ed1010ca65dbf91cde9abfac
+# Source0-md5:	83598c7cfacf5b47892af667729a111b
 Patch0:		%{name}-nosse.patch
 Patch1:		%{name}-format.patch
 URL:		http://www.gpi-site.com/gpi2/
