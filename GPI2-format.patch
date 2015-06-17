@@ -1,11 +1,11 @@
---- GPI2-1.1.0/src/GPI2_Logger.c.orig	2014-06-18 21:42:30.000000000 +0200
-+++ GPI2-1.1.0/src/GPI2_Logger.c	2014-09-03 17:47:28.132279202 +0200
-@@ -191,7 +191,7 @@
-       vsnprintf (buf + sl, 1024 - sl, fmt, ap);
-       va_end (ap);
+--- GPI2-1.2.0/src/GPI2_Logger.c.orig	2015-06-16 21:56:40.249062867 +0200
++++ GPI2-1.2.0/src/GPI2_Logger.c	2015-06-16 21:58:07.382392548 +0200
+@@ -93,7 +93,7 @@
  
--      fprintf (stdout, buf);
-+      fputs (buf, stdout);
+   if( ! glb_gaspi_init )
+     {
+-      fprintf(stdout, buf);
++      fputs(buf, stdout);
        fflush (stdout);
- 
        goto endL;
+     }

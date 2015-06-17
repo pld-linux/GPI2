@@ -1,18 +1,22 @@
 # TODO: CUDA, MPI, Load Leveler(?)
-# - find gaspi_logger sources and compile it
 #
 # Conditional build:
 %bcond_without	f90	# Fortran bindings
+%bcond_without	logger	# gaspi_logger utility
 #
+%ifnarch %{x8664}
+# no sources, only x86_64 binary included
+%undefine	with_logger
+%endif
 Summary:	GPI-2 - API for asynchronous communication
 Summary(pl.UTF-8):	GPI-2 - API do komunikacji asynchronicznej
 Name:		GPI2
-Version:	1.1.1
+Version:	1.2.0
 Release:	0.1
 License:	GPL v3
 Group:		Applications
 Source0:	https://www.openfabrics.org/downloads/gpi2/%{name}-%{version}.tar.gz
-# Source0-md5:	83598c7cfacf5b47892af667729a111b
+# Source0-md5:	985ef97215563f5af5e71833a490ef97
 Patch0:		%{name}-nosse.patch
 Patch1:		%{name}-format.patch
 URL:		http://www.gpi-site.com/gpi2/
@@ -20,8 +24,6 @@ BuildRequires:	doxygen
 %{?with_f90:BuildRequires:	gcc-fortran >= 5:4.0}
 BuildRequires:	libibverbs-devel >= 1.1.6
 Requires:	libibverbs >= 1.1.6
-# FIXME: gaspi_logger sources are missing
-ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -46,9 +48,11 @@ skalowalny i odporny na awarie interfejs do aplikacji równoległych.
 %patch0 -p1
 %patch1 -p1
 
+%if %{without logger}
 # precompiled binaries
 # FIXME: sources are missing
-#%{__rm} bin/gaspi_logger
+%{__rm} bin/gaspi_logger
+%endif
 
 %build
 %{__make} clean
@@ -71,7 +75,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}}
 
 install bin/gaspi_run.ssh $RPM_BUILD_ROOT%{_bindir}/gaspi_run
-install bin/ssh.spawner bin/gaspi_cleanup bin/gaspi_logger $RPM_BUILD_ROOT%{_bindir}
+install bin/ssh.spawner bin/gaspi_cleanup $RPM_BUILD_ROOT%{_bindir}
+%if %{with logger}
+install bin/gaspi_logger $RPM_BUILD_ROOT%{_bindir}
+%endif
 cp -pr include $RPM_BUILD_ROOT%{_includedir}
 cp -p lib64/lib* $RPM_BUILD_ROOT%{_libdir}
 
@@ -82,12 +89,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README docs/html
 %attr(755,root,root) %{_bindir}/gaspi_cleanup
+%if %{with logger}
 %attr(755,root,root) %{_bindir}/gaspi_logger
+%endif
 %attr(755,root,root) %{_bindir}/gaspi_run
 %attr(755,root,root) %{_bindir}/ssh.spawner
 %{_libdir}/libGPI2.a
 %{_libdir}/libGPI2-dbg.a
 %{_includedir}/GASPI.h
+%{_includedir}/GASPI_Ext.h
 %{_includedir}/GASPI_GPU.h
 %{_includedir}/GASPI_Threads.h
 %{_includedir}/PGASPI.h
